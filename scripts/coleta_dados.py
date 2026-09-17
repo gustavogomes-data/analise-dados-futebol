@@ -67,7 +67,7 @@ for liga in ligas_alvo:
         except Exception as e:
             print(f"   [ERRO] Falha ao baixar {liga} - {temporada}. Detalhe: {e}")
         
-        # 4. A Regra de Ouro do Web Scraping: Pausa para não ser bloqueado
+        # 4.Pausa para não ser bloqueado
         print("   Aguardando 7 segundos para evitar bloqueio do servidor...\n")
         time.sleep(7)
 
