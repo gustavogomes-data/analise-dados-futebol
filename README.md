@@ -34,9 +34,13 @@ Python + soccerdata
   ↓
 25 arquivos CSV
   ↓
-Verificação e limpeza
+Verificação e consolidação
   ↓
 CSV consolidado
+  ↓
+Limpeza e tratamento
+  ↓
+CSV tratado
   ↓
 SQL Server
   ↓
@@ -66,6 +70,7 @@ O CSV consolidado foi importado para o **SQL Server**, camada intermediária uti
 ### 5. Definição dos KPIs
 
 Em um caderno físico, foi feito o planejamento do dashboard, incluindo a definição dos principais KPIs e métricas, além de um esboço inicial do layout da página.
+
 ## Estrutura do projeto
 
 ```
@@ -101,3 +106,6 @@ projeto-futebol/
 
 **Gustavo Gomes**
 Estudante de Ciência da Computação
+```
+
+Ao colar no GitHub, confira se os blocos com ` ``` ` (pipeline e estrutura de pastas) ficaram com as crases isoladas em suas próprias linhas — isso é o que garante a renderização correta das setas e da árvore de diretórios.
