@@ -3,10 +3,6 @@ import pandas as pd #biblioteca para manipulação de dados
 import time #biblioteca para pausar o código e evitar bloqueio do servidor
 import os #biblioteca para manipulação de arquivos e pastas
 
-
-#misc,playing_time
-
-
 # 1. As 5 principais ligas europeias suportadas pela biblioteca
 ligas_alvo = [
     'ENG-Premier League',
@@ -75,4 +71,4 @@ for liga in ligas_alvo:
         print("   Aguardando 7 segundos para evitar bloqueio do servidor...\n")
         time.sleep(7)
 
-print("--- CARGA HISTÓRICA CONCLUÍDA COM SUCESSO! ---")
+print("--- EXTRAÇÃO DE DADOS CONCLUÍDO COM SUCESSO! ---")
