@@ -73,7 +73,7 @@ Em um caderno físico, foi feito o planejamento do dashboard, incluindo a defini
 
 ## Estrutura do projeto
 
-```
+
 projeto-futebol/
 │
 ├── script.py
@@ -84,7 +84,7 @@ projeto-futebol/
 ├── sql/
 │
 └── README.md
-```
+
 
 ## SQL
 
