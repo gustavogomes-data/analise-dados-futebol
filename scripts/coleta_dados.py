@@ -37,10 +37,6 @@ pastas_temporadas = {
     '2526': '2025-2026'
 }
 
-
-print("--- INICIANDO A CARGA HISTÓRICA (CAMADA BRONZE) ---")
-print("Isso pode levar alguns minutos. Pode ir tomar uma água!\n")
-
 # 3. O Loop: Passando por cada liga e cada ano
 for liga in ligas_alvo:
     for temporada in temporadas_alvo:
@@ -75,7 +71,7 @@ for liga in ligas_alvo:
         except Exception as e:
             print(f"   [ERRO] Falha ao baixar {liga} - {temporada}. Detalhe: {e}")
         
-        # 4. A Regra de Ouro do Web Scraping: Pausa para não ser bloqueado
+        # 4. Pausa para não ser bloqueado
         print("   Aguardando 7 segundos para evitar bloqueio do servidor...\n")
         time.sleep(7)
 
