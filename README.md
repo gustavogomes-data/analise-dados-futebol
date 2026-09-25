@@ -194,14 +194,11 @@ Os resultados devem ser interpretados dentro da amostra analisada e não como um
 ```text
 projeto-futebol/
 ├── dados/
-│   ├── Bruto/
-│   └── Limpo/
-├── scripts/
-├── notebooks/
-├── sql/
-├── powerbi/
 ├── docs/
-│   └── images/
+├── notebooks/
+├── powerbi/
+├── scripts/
+├── sql/
 ├── .gitignore
 └── README.md
 ```
