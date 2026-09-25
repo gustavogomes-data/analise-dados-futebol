@@ -2,17 +2,17 @@
 
 Projeto de análise de dados aplicado ao futebol europeu, com pipeline completo de coleta, tratamento, modelagem em banco relacional e visualização em Power BI.
 
-O foco é medir desempenho e identificar tendências de evolução ou declínio de jogadores ao longo de múltiplas temporadas, com atenção a problemas comuns em análises esportivas, como amostras pequenas, ruído estatístico e interpretação equivocada de variações naturais como tendências reais.
+O foco é analisar o desempenho dos jogadores e identificar tendências de evolução ou declínio ao longo das temporadas. A análise também busca evitar conclusões baseadas em poucos dados ou em variações que podem acontecer naturalmente de uma temporada para outra.
 
 ## 1. Descrição
 
 O projeto coleta dados de jogadores das cinco principais ligas nacionais da Europa ao longo das últimas cinco temporadas (2021/22 a 2025/26), trata e organiza essas informações em um banco SQL Server e constrói um dashboard em Power BI dividido em duas páginas: uma voltada para a evolução individual de jogadores ao longo do tempo e outra para ranking comparativo de desempenho por temporada.
 
-A motivação não foi apenas exibir estatísticas de futebol, mas praticar um fluxo de análise de dados completo — desde a coleta bruta até decisões metodológicas explícitas sobre como medir "evolução" de forma que a análise seja menos sensível a ruído estatístico e amostras pequenas.
+A motivação não foi apenas mostrar estatísticas de futebol, mas também praticar um processo completo de análise de dados, desde a coleta e organização dos dados até a definição de critérios para medir a evolução dos jogadores de forma mais consistente, evitando que poucos dados ou variações isoladas influenciem demais os resultados.
 
 ## 2. Objetivo
 
-* Praticar um pipeline de dados ponta a ponta: coleta → tratamento → banco relacional → BI.
+* Praticar um pipeline de dados ponta a ponta: coleta → tratamento → SQL → BI.
 * Aplicar critérios para medir tendência de desempenho ao longo do tempo, evitando conclusões precipitadas a partir de poucas observações.
 * Construir um dashboard que comunique não apenas números, mas também o contexto e as limitações por trás deles.
 
@@ -92,15 +92,19 @@ Essa separação facilita a manutenção do projeto e reduz a duplicação de l�
 
 As principais etapas realizadas com Pandas incluem:
 
-* Padronização de nomes de jogadores e times entre temporadas.
-* Tratamento de jogadores que atuaram por mais de um clube na mesma temporada.
-* Conversão e padronização dos tipos de dados.
-* Organização de partidas, minutos, gols e assistências como valores numéricos.
-* Geração da métrica derivada G+A/90 a partir dos totais de gols, assistências e minutos jogados.
-* Aplicação dos critérios necessários para as análises.
-* Exportação dos dados tratados para CSV.
-* Preparação da base para carga no SQL Server.
+1. **Consolidação dos Dados:** Leitura e concatenação de múltiplos arquivos CSV de diferentes caminhos em um único DataFrame bruto, exportado como `DadosFUTBrutos.csv`.
 
+2. **Achatamento de Cabeçalho:** Transformação do cabeçalho multinível (MultiIndex) em um formato simples de nível único, unindo os títulos com `_` e renomeando as variáveis.
+
+3. **Seleção de Atributos:** Seleção das colunas necessárias para a análise, incluindo tanto os números absolutos quanto as métricas por 90 minutos já calculadas pela fonte original. O código não calcula a métrica G+A/90, apenas seleciona e renomeia a coluna existente.
+
+4. **Filtragem de Posição:** Aplicação de filtro para manter jogadores classificados como meio-campistas ou atacantes (`MF` ou `FW`).
+
+5. **Corte por Minutagem:** Aplicação da regra de negócio principal da análise, mantendo apenas jogadores com mais de 900 minutos em campo.
+
+6. **Tradução do Dicionário de Dados:** Renomeação das colunas mantidas na base de inglês para português, como `Gls_90` para `gols_90`.
+
+7. **Validação e Exportação:** Verificação dos dados e exportação do resultado final para o arquivo `DadosFUTLimpos.csv`. Não há, neste notebook, uma etapa de ligação ou preparação dos dados para o SQL Server.
 ## 9. Banco de dados / SQL
 
 Os dados tratados são carregados em uma tabela base `DadosFUTLimpos` no SQL Server, com granularidade de jogador por temporada.
@@ -216,12 +220,11 @@ projeto-futebol/
 
 ## 14. Limitações do projeto
 
-* A classificação de tendência utiliza uma faixa fixa de ±0,05 como critério de neutralidade e não um teste formal de significância estatística.
+* O cálculo de tendência usa a variação absoluta de G+A/90, não relativa. Isso significa que jogadores com um ponto de partida muito alto (ex.: já entre os melhores da posição) tendem a aparecer no ranking de declínio por efeito de regressão à média — uma tendência estatística natural de aproximação da média histórica após um pico, não necessariamente uma queda real de nível — enquanto jogadores que partem de um patamar baixo podem aparecer com tendências de evolução desproporcionalmente altas em termos relativos.
 * A regressão linear não diferencia automaticamente uma evolução gradual de uma mudança de patamar causada por uma mudança de clube ou contexto.
 * G+A/90 não separa gols de pênalti dos demais gols.
 * A análise não realiza ajuste específico por posição ou função tática.
 * Os rankings de totais da Página 2 podem ser influenciados por diferenças no número de partidas disponíveis em cada liga e temporada.
-* O filtro de 900 minutos e o requisito de temporadas para tendência reduzem a presença de jogadores com pouca participação ou início recente nas principais ligas.
 
 ## 15. Possíveis melhorias futuras
 
