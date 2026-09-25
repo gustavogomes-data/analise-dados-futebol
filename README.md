@@ -1,112 +1,190 @@
-Análise de Desempenho e Evolução de Jogadores — Top 5 Ligas Europeias
+# Análise de Desempenho e Evolução de Jogadores — Top 5 Ligas Europeias
 
-Projeto de análise de dados aplicado ao futebol europeu, com pipeline completo de coleta, tratamento, modelagem em banco relacional e visualização em Power BI. O foco é medir desempenho e identificar tendências de evolução (ou declínio) de jogadores ao longo de múltiplas temporadas, com atenção explícita a problemas comuns em análises esportivas: amostras pequenas, ruído estatístico e interpretação equivocada de variação natural como tendência real.
+Projeto de análise de dados aplicado ao futebol europeu, com pipeline completo de coleta, tratamento, modelagem em banco relacional e visualização em Power BI.
 
-1. Descrição
+O foco é medir desempenho e identificar tendências de evolução ou declínio de jogadores ao longo de múltiplas temporadas, com atenção a problemas comuns em análises esportivas, como amostras pequenas, ruído estatístico e interpretação equivocada de variações naturais como tendências reais.
 
-O projeto coleta dados de jogadores das cinco principais ligas nacionais da Europa ao longo das últimas cinco temporadas (2021/22 a 2025/26), trata e organiza essas informações em um banco SQL Server, e constrói um dashboard em Power BI dividido em duas páginas: uma voltada para a evolução individual de jogadores ao longo do tempo, e outra para ranking comparativo de desempenho por temporada.
+## 1. Descrição
 
-A motivação não foi apenas exibir estatísticas de futebol, mas praticar um fluxo de análise de dados completo — desde a coleta bruta até decisões metodológicas explícitas sobre como medir "evolução" de forma que resista a ruído estatístico e amostras pequenas.
+O projeto coleta dados de jogadores das cinco principais ligas nacionais da Europa ao longo das últimas cinco temporadas (2021/22 a 2025/26), trata e organiza essas informações em um banco SQL Server e constrói um dashboard em Power BI dividido em duas páginas: uma voltada para a evolução individual de jogadores ao longo do tempo e outra para ranking comparativo de desempenho por temporada.
 
-2. Objetivo
-Praticar um pipeline de dados ponta a ponta (coleta → tratamento → banco relacional → BI).
-Aplicar critérios estatísticos defensáveis para medir tendência de desempenho ao longo do tempo, evitando conclusões precipitadas a partir de poucas observações.
-Construir um dashboard que comunique não só números, mas o contexto e as limitações por trás deles.
-3. Perguntas de negócio / análise
-Quais jogadores apresentam a maior tendência de evolução (ou declínio) em G+A/90 ao longo das últimas temporadas?
-Essa tendência é estatisticamente defensável, ou pode ser explicada por variação natural entre temporadas?
-Quem lidera os rankings de gols, assistências e G+A em cada temporada, dentro das cinco principais ligas?
-Como esses rankings mudam ao segmentar por liga, temporada e métrica?
-4. Fonte e escopo dos dados
-Fonte: FBref, coletado via Python com a biblioteca soccerdata.
-Ligas: Premier League, La Liga, Bundesliga, Serie A e Ligue 1.
-Temporadas: 2021/22 a 2025/26 (últimas 5 temporadas disponíveis no momento da coleta).
-Escopo: apenas jogos das competições nacionais de cada liga. Jogos de Champions League, Europa League e outras competições europeias não são considerados — o foco é comparação de desempenho dentro do contexto de cada liga doméstica, que têm calendários e níveis de competitividade diferentes entre si.
-5. Critérios e regras da análise
+A motivação não foi apenas exibir estatísticas de futebol, mas praticar um fluxo de análise de dados completo — desde a coleta bruta até decisões metodológicas explícitas sobre como medir "evolução" de forma que a análise seja menos sensível a ruído estatístico e amostras pequenas.
 
-Esses critérios foram definidos (e em alguns casos revisados) ao longo do desenvolvimento do projeto, para evitar que amostras pequenas ou ruído estatístico distorçam os resultados:
+## 2. Objetivo
 
-Critério	Valor	Motivo
-Minutos mínimos por temporada	900 minutos	Evita que jogadores com poucos minutos jogados tenham taxas por 90 (G+A/90) distorcidas por amostra pequena. Aplicado na base de dados, antes de qualquer cálculo de ranking ou tendência.
-Temporadas mínimas para cálculo de tendência	4 temporadas	Com 3 pontos, a regressão linear tem apenas 1 grau de liberdade — insuficiente para distinguir uma tendência real de uma variação isolada entre duas temporadas. Com 4+, o cálculo passa a ter uma base estatística mínima mais sólida.
-Classificação de tendência	Positiva: > +0,05 · Negativa: < −0,05 · Neutra: entre −0,05 e +0,05	O coeficiente angular (slope) da regressão tem uma margem de ruído esperada, mesmo sem nenhuma evolução real acontecendo. A faixa neutra reconhece essa margem, em vez de classificar qualquer desvio de zero como uma tendência "real".
-Escopo de competições	Apenas jogos da liga nacional	Evita misturar contextos de competitividade diferentes (liga doméstica vs. competições europeias) na mesma métrica.
-6. Tecnologias utilizadas
-Camada	Ferramenta
-Coleta de dados	Python, soccerdata
-Tratamento e limpeza	Python, Pandas
-Armazenamento	SQL Server
-Modelagem e regras de negócio	SQL (views)
-Visualização	Power BI (Power Query, DAX)
-Versionamento	Git / GitHub
-7. Pipeline do projeto
+* Praticar um pipeline de dados ponta a ponta: coleta → tratamento → banco relacional → BI.
+* Aplicar critérios para medir tendência de desempenho ao longo do tempo, evitando conclusões precipitadas a partir de poucas observações.
+* Construir um dashboard que comunique não apenas números, mas também o contexto e as limitações por trás deles.
+
+## 3. Perguntas de negócio / análise
+
+* Quais jogadores apresentam maior tendência de evolução ou declínio em G+A/90 ao longo das últimas temporadas?
+* Essa tendência é consistente ao longo do período analisado?
+* Quem lidera os rankings de gols, assistências e G+A em cada temporada dentro das cinco principais ligas?
+* Como esses rankings mudam ao segmentar por liga, temporada e métrica?
+
+## 4. Fonte e escopo dos dados
+
+* **Fonte:** [FBref](https://fbref.com), coletado via Python com a biblioteca [`soccerdata`](https://github.com/probberechts/soccerdata).
+* **Ligas:** Premier League, La Liga, Bundesliga, Serie A e Ligue 1.
+* **Temporadas:** 2021/22 a 2025/26.
+* **Escopo:** apenas jogos das competições nacionais de cada liga.
+* Jogos de Champions League, Europa League e outras competições europeias não são considerados.
+
+O foco é comparar o desempenho dos jogadores dentro do contexto de suas respectivas ligas nacionais.
+
+## 5. Critérios e regras da análise
+
+Os critérios foram definidos ao longo do desenvolvimento do projeto para reduzir o impacto de amostras pequenas e variações isoladas nos resultados.
+
+| Critério                                     | Valor                                                               | Motivo                                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Minutos mínimos por temporada                | 900 minutos                                                         | Reduz o impacto de amostras pequenas nas métricas por 90 minutos.                                 |
+| Temporadas mínimas para cálculo de tendência | 4 temporadas                                                        | Garante uma quantidade maior de observações para estimar a direção da evolução ao longo do tempo. |
+| Classificação de tendência                   | Positiva: > +0,05 · Negativa: < −0,05 · Neutra: entre −0,05 e +0,05 | Evita classificar pequenas variações próximas de zero como tendência positiva ou negativa.        |
+| Escopo de competições                        | Apenas jogos da liga nacional                                       | Mantém o contexto competitivo da análise consistente.                                             |
+
+## 6. Tecnologias utilizadas
+
+| Camada                        | Ferramenta           |
+| ----------------------------- | -------------------- |
+| Coleta de dados               | Python, `soccerdata` |
+| Tratamento e limpeza          | Python, Pandas       |
+| Armazenamento                 | SQL Server           |
+| Modelagem e regras de negócio | SQL (views)          |
+| Visualização                  | Power BI             |
+| Versionamento                 | Git / GitHub         |
+
+## 7. Pipeline do projeto
+
+```text
 FBref
-Coleta de dadosPython + soccerdata
-Dados brutosCSV
-Limpeza e tratamentoPandas
-Dados tratadosCSV limpo
-SQL ServerCarga das tabelas
-Views SQLRegras e métricas denegócio
-Power BIModelo de dados + DAX
-DashboardEvolução dos Jogadores +Ranking de Jogadores
+  ↓
+Coleta de dados
+Python + soccerdata
+  ↓
+Dados brutos
+CSV
+  ↓
+Limpeza e tratamento
+Pandas
+  ↓
+Dados tratados
+CSV limpo
+  ↓
+SQL Server
+  ↓
+Views SQL
+Regras e métricas de negócio
+  ↓
+Power BI
+Modelo de dados + visualizações
+  ↓
+Dashboard
+Evolução dos Jogadores + Ranking de Jogadores
+```
 
-O fluxo segue uma lógica de responsabilidade única por camada: a coleta em Python não aplica regra de negócio nenhuma, o tratamento em Pandas resolve inconsistências e formata os dados, e as regras de análise (critérios de elegibilidade, cálculo de tendência, classificação) ficam concentradas no SQL, para não haver lógica duplicada entre banco e Power BI.
+O fluxo foi organizado por camadas, separando coleta, tratamento, armazenamento, regras de negócio e visualização.
 
-8. Tratamento e preparação dos dados
+Essa separação facilita a manutenção do projeto e reduz a duplicação de lógica entre SQL e Power BI.
 
-Etapas realizadas com Pandas antes da carga no banco:
+## 8. Tratamento e preparação dos dados
 
-Padronização de nomes de jogadores e times entre temporadas (para evitar que o mesmo jogador apareça como entidades diferentes por variação de grafia).
-Tratamento de jogadores que atuaram por mais de um clube na mesma temporada.
-Conversão e padronização de tipos de dado (minutos, partidas, gols e assistências como valores numéricos consistentes).
-Geração da métrica derivada G+A/90 a partir dos totais de gols, assistências e minutos jogados.
-Exportação para CSV limpo, servindo de base para a carga no SQL Server.
-9. Banco de dados / SQL
+As principais etapas realizadas com Pandas incluem:
 
-Os dados tratados são carregados em uma tabela base (DadosFUTLimpos) no SQL Server, com granularidade de jogador por temporada. A partir dela, foram criadas views para concentrar as regras de negócio e evitar recalcular a mesma lógica em múltiplos lugares (banco e Power BI):
+* Padronização de nomes de jogadores e times entre temporadas.
+* Tratamento de jogadores que atuaram por mais de um clube na mesma temporada.
+* Conversão e padronização dos tipos de dados.
+* Organização de partidas, minutos, gols e assistências como valores numéricos.
+* Geração da métrica derivada G+A/90 a partir dos totais de gols, assistências e minutos jogados.
+* Aplicação dos critérios necessários para as análises.
+* Exportação dos dados tratados para CSV.
+* Preparação da base para carga no SQL Server.
 
-vw_RankingTendenciaJogadores — calcula a tendência de G+A/90 de cada jogador via regressão linear (mínimos quadrados), aplicando o critério de mínimo de 4 temporadas.
-vw_KPI3_MaiorEvolucao — retorna o jogador com a maior tendência positiva dentro da amostra elegível.
-vw_KPI2_MaiorDeclinio — retorna o jogador com a maior tendência negativa dentro da amostra elegível.
-vw_DadosJogadorTemporada — base utilizada pelo Power BI para os indicadores dinâmicos por jogador (ex.: média de G+A/90 ponderada por minutos).
+## 9. Banco de dados / SQL
 
-A decisão de calcular a regressão linear diretamente em SQL (em vez de recriá-la em DAX) foi deliberada: evita duplicar a mesma fórmula em duas linguagens diferentes, com dois pontos de manutenção e risco de divergência entre eles.
+Os dados tratados são carregados em uma tabela base `DadosFUTLimpos` no SQL Server, com granularidade de jogador por temporada.
 
-10. Dashboard no Power BI
+A partir dessa base, foram criadas views para concentrar regras de negócio e cálculos utilizados pelo dashboard.
 
-O dashboard é dividido em duas páginas com propósitos distintos.
+Principais views:
 
-Página 1 — Evolução dos Jogadores
+* **`vw_RankingTendenciaJogadores`** — calcula a tendência de G+A/90 de cada jogador por meio de regressão linear, considerando o critério mínimo de temporadas.
+* **`vw_KPI3_MaiorEvolucao`** — retorna o jogador com maior tendência positiva dentro da amostra elegível.
+* **`vw_KPI2_MaiorDeclinio`** — retorna o jogador com maior tendência negativa dentro da amostra elegível.
+* **`vw_DadosJogadorTemporada`** — fornece os dados utilizados pelos indicadores e análises individuais no Power BI.
 
-Mostrar Imagem
+A decisão de concentrar o cálculo da regressão linear no SQL foi adotada para evitar a duplicação da mesma lógica em diferentes camadas do projeto.
 
-Foco na trajetória individual de um jogador ao longo das temporadas disponíveis:
+## 10. Dashboard no Power BI
 
-Busca de jogador, com gráfico de G+A/90 por temporada e tabela-resumo (partidas, minutos, gols, assistências, G+A e G+A/90 por temporada).
-KPI de média de G+A/90, calculado de forma ponderada por minutos (não é uma média simples das taxas anuais — temporadas com mais minutos jogados têm peso proporcionalmente maior no cálculo). O KPI é dinâmico: mostra a média do jogador selecionado, ou a média geral da base quando nenhum jogador está selecionado.
-Ranking de "Maior evolução" e "Maior declínio" de tendência, calculado por regressão linear sobre o G+A/90 do jogador ao longo das temporadas disponíveis, exigindo no mínimo 4 temporadas para garantir uma base estatística mínima na estimativa.
-Gráfico de distribuição de tendência (Positiva / Neutra / Negativa) sobre a base elegível.
-Página 2 — Ranking de Jogadores
+O dashboard é dividido em duas páginas com objetivos diferentes.
 
-Mostrar Imagem
+### Página 1 — Evolução dos Jogadores
 
-Foco em comparação de desempenho dentro de um recorte específico:
+![Página 1](docs/images/pagina1.png)
 
-Segmentação por temporada, métrica (Gols, Assistências, G+A) e liga.
-Ranking Top 10 dinâmico, com título que reflete o filtro selecionado.
-Considera apenas jogos das ligas nacionais, com o mesmo piso de 900 minutos por temporada aplicado na base.
-11. Principais métricas e lógica das análises
+A primeira página é dedicada à análise da trajetória individual dos jogadores ao longo das temporadas.
 
-G+A/90 (Gols + Assistências por 90 minutos) Normaliza a produção ofensiva por tempo de jogo, permitindo comparar jogadores com volumes de minutos diferentes. É uma taxa, e como toda taxa calculada sobre poucas observações, tende a ter mais ruído quando a amostra de minutos é pequena — por isso o piso de 900 minutos é aplicado antes de qualquer outro cálculo.
+Principais elementos:
 
-Tendência (regressão linear) Para cada jogador com 4 ou mais temporadas elegíveis, calcula-se o coeficiente angular (slope) da regressão linear de G+A/90 ao longo do tempo. O objetivo é identificar uma direção de evolução ou declínio consistente — não apenas comparar a primeira e a última temporada isoladamente, o que seria mais sensível a uma única variação atípica.
+* Busca de jogador.
+* Gráfico de G+A/90 por temporada.
+* Resumo estatístico do jogador.
+* Partidas, minutos, gols, assistências e G+A.
+* Média de G+A/90 ponderada por minutos.
+* Ranking de maior evolução.
+* Ranking de maior declínio.
+* Distribuição de tendência entre positiva, neutra e negativa.
 
-Uma variação isolada entre duas temporadas não é, por si só, evidência de tendência: por isso o mínimo de 4 temporadas e a classificação por faixa (e não pelo sinal exato do coeficiente) fazem parte do critério. Jogadores com coeficiente entre −0,05 e +0,05 são classificados como neutros, por representar uma variação dentro do que se pode esperar por flutuação normal entre temporadas — e não uma tendência real de evolução ou declínio.
+Os rankings de evolução e declínio consideram apenas jogadores com quantidade mínima de temporadas elegíveis, reduzindo o impacto de variações isoladas.
 
-Vale destacar: os resultados são interpretados como "maior tendência positiva dentro da amostra analisada", não como afirmações absolutas do tipo "jogador que mais evoluiu no futebol" — a amostra é restrita a jogadores com volume mínimo de minutos e presença consistente nas cinco principais ligas, o que já é um recorte específico, não uma avaliação universal.
+### Página 2 — Ranking de Jogadores
 
-12. Estrutura de pastas do repositório
-text
+![Página 2](docs/images/pagina2.png)
+
+A segunda página é voltada para a comparação de desempenho dos jogadores dentro de um recorte específico.
+
+Principais elementos:
+
+* Segmentação por temporada.
+* Segmentação por métrica.
+* Segmentação por liga.
+* Ranking Top 10 dinâmico.
+* Métricas de gols, assistências e G+A.
+* Filtro mínimo de 900 minutos por temporada.
+
+Os rankings consideram apenas partidas das ligas nacionais analisadas.
+
+## 11. Principais métricas e lógica das análises
+
+### G+A/90
+
+**G+A/90** representa a quantidade de gols e assistências produzidos pelo jogador a cada 90 minutos.
+
+A métrica permite comparar jogadores com diferentes volumes de minutos jogados, reduzindo a influência direta do tempo total em campo.
+
+Como se trata de uma taxa, ela pode ser mais sensível a amostras pequenas. Por isso, o projeto utiliza um mínimo de **900 minutos por temporada** antes das análises.
+
+### Tendência
+
+A tendência é calculada utilizando uma regressão linear sobre o G+A/90 de cada jogador ao longo das temporadas elegíveis.
+
+O coeficiente angular (**slope**) representa a direção da variação ao longo do tempo:
+
+* **Slope positivo:** tendência de aumento.
+* **Slope negativo:** tendência de redução.
+* **Slope próximo de zero:** pouca variação sistemática.
+
+Para reduzir a influência de variações isoladas, o projeto exige um mínimo de **4 temporadas elegíveis** para o cálculo da tendência.
+
+Além disso, foi definida uma faixa neutra entre **-0,05 e +0,05**, evitando classificar pequenas variações como tendências positivas ou negativas.
+
+Os resultados devem ser interpretados dentro da amostra analisada e não como uma avaliação absoluta da carreira de um jogador.
+
+## 12. Estrutura de pastas do repositório
+
+```text
 projeto-futebol/
 ├── dados/
 │   ├── Bruto/
@@ -119,33 +197,51 @@ projeto-futebol/
 │   └── images/
 ├── .gitignore
 └── README.md
+```
 
-Alguns diretórios acima (como notebooks/) representam a estrutura planejada do projeto e podem ainda estar em organização.
+## 13. Como executar / reproduzir o projeto
 
-13. Como executar / reproduzir o projeto
-Clone o repositório.
-Instale as dependências Python do projeto (Pandas, soccerdata).
-Execute os scripts de coleta para obter os dados do FBref.
-Execute os scripts/notebooks de tratamento para gerar o CSV limpo.
-Carregue o CSV tratado no SQL Server e execute os scripts em sql/ para criar as views.
-Abra o arquivo .pbix em powerbi/ e aponte a conexão de dados para o seu banco SQL Server.
-Atualize os dados (Refresh) no Power BI.
-14. Limitações do projeto
-A classificação de tendência usa uma faixa fixa (±0,05) como aproximação do ruído estatístico esperado, e não um teste formal de significância (como intervalo de confiança por jogador). É uma heurística baseada na ordem de grandeza do ruído da regressão com poucas observações, não um cálculo de p-valor.
-A regressão linear não distingue uma evolução gradual de uma mudança de patamar associada a um evento específico (ex.: transferência para um clube diferente) — ambas podem gerar o mesmo coeficiente angular.
-G+A/90 não separa gols de pênalti dos demais, nem ajusta por posição ou papel tático do jogador em campo.
-Diferenças no número de jogos por temporada entre ligas (por exemplo, calendários de 34 rodadas contra 38) não são normalizadas nos rankings de totais (gols, assistências, G+A) da página 2.
-A amostra já é filtrada por jogadores estabelecidos (900+ minutos, 4+ temporadas nas cinco principais ligas), o que naturalmente reduz a variabilidade observada — o projeto não captura jogadores em início de carreira ou com passagens mais curtas por essas ligas.
-15. Possíveis melhorias futuras
-Substituir a faixa fixa de classificação de tendência por um cálculo de intervalo de confiança do coeficiente angular por jogador.
-Segmentar as análises por posição e faixa etária.
-Identificar e sinalizar mudanças de clube no gráfico de evolução, para diferenciar mudança de contexto de evolução orgânica.
-Incluir métricas adicionais (gols sem pênalti, xG, por exemplo) quando disponíveis na fonte.
-Normalizar rankings de totais pelo número de jogos disputados por liga/temporada.
-16. Conclusão
+1. Clone o repositório.
+2. Instale as dependências Python utilizadas no projeto.
+3. Execute os scripts de coleta para obter os dados do FBref.
+4. Execute o processo de tratamento dos dados.
+5. Gere o CSV tratado.
+6. Carregue os dados no SQL Server.
+7. Execute os scripts SQL para criação das views.
+8. Abra o arquivo `.pbix` no Power BI.
+9. Configure a conexão com o banco SQL Server.
+10. Atualize os dados no Power BI.
 
-O projeto foi construído com atenção deliberada a um problema comum em análises esportivas: confundir variação estatística normal com tendência real, especialmente em amostras pequenas. As decisões de critério (piso de minutos, mínimo de temporadas, faixa de classificação neutra) foram tomadas — e revisadas — justamente para reduzir esse risco, e estão documentadas para que qualquer pessoa possa questionar ou ajustar essas escolhas.
+## 14. Limitações do projeto
 
-17. Autor
+* A classificação de tendência utiliza uma faixa fixa de ±0,05 como critério de neutralidade e não um teste formal de significância estatística.
+* A regressão linear não diferencia automaticamente uma evolução gradual de uma mudança de patamar causada por uma mudança de clube ou contexto.
+* G+A/90 não separa gols de pênalti dos demais gols.
+* A análise não realiza ajuste específico por posição ou função tática.
+* Os rankings de totais da Página 2 podem ser influenciados por diferenças no número de partidas disponíveis em cada liga e temporada.
+* O filtro de 900 minutos e o requisito de temporadas para tendência reduzem a presença de jogadores com pouca participação ou início recente nas principais ligas.
 
-Desenvolvido como projeto de portfólio em Análise de Dados / Business Intelligence.
+## 15. Possíveis melhorias futuras
+
+* Substituir a faixa fixa de tendência por intervalos de confiança do coeficiente angular.
+* Segmentar as análises por posição.
+* Adicionar análise por faixa etária.
+* Identificar mudanças de clube no gráfico de evolução.
+* Adicionar métricas como gols sem pênalti e xG quando disponíveis.
+* Normalizar rankings de totais considerando o número de jogos disputados.
+* Adicionar novas métricas de desempenho ofensivo e defensivo.
+* Comparar diferentes métodos estatísticos de identificação de tendência.
+
+## 16. Conclusão
+
+O projeto foi desenvolvido para aplicar um fluxo completo de análise de dados, desde a coleta e tratamento das informações até a modelagem em SQL Server e visualização no Power BI.
+
+Além da construção do dashboard, o projeto busca demonstrar a importância de definir critérios metodológicos antes de interpretar os resultados.
+
+O uso de um mínimo de minutos por temporada, um número mínimo de temporadas para análise de tendência e uma faixa neutra para pequenas variações ajuda a reduzir interpretações baseadas apenas em oscilações isoladas.
+
+Dessa forma, o projeto combina **Python, SQL e Power BI** em um único fluxo de análise aplicado a dados reais de futebol.
+
+## 17. Autor
+
+Desenvolvido por **Gustavo Gomes** como projeto de portfólio em **Análise de Dados / Business Intelligence**.
