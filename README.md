@@ -119,6 +119,7 @@ A partir dessa base, foram criadas views para concentrar regras de negócio e c�
 - **`vw_KPI2_MaiorDeclinio`** — retorna o jogador com maior tendência negativa dentro da amostra elegível.
 - **`vw_KPI4_PercentualTendencias`** — calcula a distribuição percentual de jogadores entre tendência positiva, negativa e neutra, a partir do resultado de `vw_RankingTendenciaJogadores`.
 - **`vw_DadosJogadorTemporada`** — fornece os dados utilizados pelos indicadores e análises individuais no Power BI.
+- **`vw_pagina2_ranking`** — fornece os dados de gols, assistências e G+A por jogador e temporada utilizados no ranking comparativo da página 2.
 
 A decisão de concentrar o cálculo da regressão linear no SQL foi adotada para evitar a duplicação da mesma lógica em diferentes camadas do projeto.
 
