@@ -225,6 +225,7 @@ projeto-futebol/
 * G+A/90 não separa gols de pênalti dos demais gols.
 * A análise não realiza ajuste específico por posição ou função tática.
 * Os rankings de totais da Página 2 podem ser influenciados por diferenças no número de partidas disponíveis em cada liga e temporada.
+* A base não registra a posição do jogador por temporada, apenas o jogador em si — o que significa que mudanças de função ao longo da carreira não são capturadas. Um exemplo é o Frimpong: hoje atua como lateral pelo Liverpool, mas em temporadas anteriores é possível que tenha atuado como ala, uma função com expectativa de produção ofensiva diferente. Sem essa informação, a métrica de tendência trata toda a série do jogador como se ele tivesse exercido a mesma função do início ao fim, o que pode distorcer a leitura de "evolução" ou "declínio" quando, na verdade, parte da mudança reflete uma troca de posição, não uma mudança de nível técnico.
 
 ## 15. Possíveis melhorias futuras
 
