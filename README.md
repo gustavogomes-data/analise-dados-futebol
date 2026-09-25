@@ -129,7 +129,7 @@ O dashboard é dividido em duas páginas com objetivos diferentes.
 
 ### Página 1 — Evolução dos Jogadores
 
-![Página 1](docs/images/pagina1.png)
+![Página 1](docs/pag1.png)
 
 A primeira página é dedicada à análise da trajetória individual dos jogadores ao longo das temporadas.
 
@@ -148,7 +148,7 @@ Os rankings de evolução e declínio consideram apenas jogadores com quantidade
 
 ### Página 2 — Ranking de Jogadores
 
-![Página 2](docs/images/pagina2.png)
+![Página 2](docs/pag2.png)
 
 A segunda página é voltada para a comparação de desempenho dos jogadores dentro de um recorte específico.
 
