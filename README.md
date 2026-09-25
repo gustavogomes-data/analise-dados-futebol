@@ -109,10 +109,13 @@ A partir dessa base, foram criadas views para concentrar regras de negócio e c�
 
 Principais views:
 
-* **`vw_RankingTendenciaJogadores`** — calcula a tendência de G+A/90 de cada jogador por meio de regressão linear, considerando o critério mínimo de temporadas.
-* **`vw_KPI3_MaiorEvolucao`** — retorna o jogador com maior tendência positiva dentro da amostra elegível.
-* **`vw_KPI2_MaiorDeclinio`** — retorna o jogador com maior tendência negativa dentro da amostra elegível.
-* **`vw_DadosJogadorTemporada`** — fornece os dados utilizados pelos indicadores e análises individuais no Power BI.
+Principais views:
+
+* **vw_RankingTendenciaJogadores — calcula a tendência de G+A/90 de cada jogador por meio de regressão linear, considerando o critério mínimo de 4 temporadas elegíveis.
+* **vw_KPI3_MaiorEvolucao — retorna o jogador com maior tendência positiva dentro da amostra elegível.
+* **vw_KPI2_MaiorDeclinio — retorna o jogador com maior tendência negativa dentro da amostra elegível.
+* **vw_KPI4_PercentualTendencias — calcula a distribuição percentual de jogadores entre tendência positiva, negativa e neutra, a partir do resultado de vw_RankingTendenciaJogadores.
+* **vw_DadosJogadorTemporada — fornece os dados utilizados pelos indicadores e análises individuais no Power BI.
 
 A decisão de concentrar o cálculo da regressão linear no SQL foi adotada para evitar a duplicação da mesma lógica em diferentes camadas do projeto.
 
